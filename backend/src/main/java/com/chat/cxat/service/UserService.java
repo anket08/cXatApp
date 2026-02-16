@@ -13,11 +13,14 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    // REGISTER USER
     public User register(User user) {
         return userRepository.save(user);
     }
 
+    // FIND USER BY USERNAME
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username).orElse(null);
+        return userRepository.findByUsername(username)
+                .orElse(null);
     }
 }

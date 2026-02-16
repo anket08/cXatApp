@@ -1,39 +1,59 @@
 package com.chat.cxat.model;
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "messages")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+
+@Document(collection = "messages")
 public class Message {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(name = "room_id", nullable = false)
-    private Long roomId;
-
-    @Column(name = "sender_id", nullable = false)
-    private Long senderId;
-
-    @Column(nullable = false, columnDefinition = "TEXT")
+    private String roomId;
+    private String senderId;
     private String content;
-
-    @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    public Message() {}
-
-    public Long getId() { return id; }
-    public Long getRoomId() { return roomId; }
-    public Long getSenderId() { return senderId; }
-    public String getContent() { return content; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
-
-    public void setId(Long id) { this.id = id; }
-    public void setRoomId(Long roomId) { this.roomId = roomId; }
-    public void setSenderId(Long senderId) { this.senderId = senderId; }
-    public void setContent(String content) { this.content = content; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // public Message() {}
+
+    // public String getId() { return id; }
+    // public String getRoomId() { return roomId; }
+    // public String getSenderId() { return senderId; }
+    // public String getContent() { return content; }
+    // public LocalDateTime getCreatedAt() { return createdAt; }
+
+    // public void setId(String id) { this.id = id; }
+    // public void setRoomId(String roomId) { this.roomId = roomId; }
+    // public void setSenderId(String senderId) { this.senderId = senderId; }
+    // public void setContent(String content) { this.content = content; }
+    // public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

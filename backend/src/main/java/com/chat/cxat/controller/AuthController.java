@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
+// @CrossOrigin("*")   // allow frontend calls
 public class AuthController {
 
     private final UserService userService;
@@ -14,18 +15,21 @@ public class AuthController {
         this.userService = userService;
     }
 
+    // REGISTER
     @PostMapping("/register")
     public User register(@RequestBody User user) {
         return userService.register(user);
     }
 
+    // LOGIN
     @PostMapping("/login")
-    public String login(@RequestBody User user) {
+    public User login(@RequestBody User user) {
         User existing = userService.findByUsername(user.getUsername());
 
         if (existing != null && existing.getPassword().equals(user.getPassword())) {
-            return "Login successful";
+            return existing;   // return full user object
         }
-        return "Invalid credentials";
+
+        return null;
     }
 }

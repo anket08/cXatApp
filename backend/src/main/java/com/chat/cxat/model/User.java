@@ -1,34 +1,26 @@
 package com.chat.cxat.model;
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "users")
+@Document(collection = "users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(unique = true, nullable = false)
     private String username;
-
-    @Column(unique = true, nullable = false)
     private String email;
-
-    @Column(nullable = false)
     private String password;
-
     private String status = "OFFLINE";
 
-    @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    public User() {
-    }
+    public User() {}
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
@@ -52,7 +44,7 @@ public class User {
         return createdAt;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -76,3 +68,6 @@ public class User {
         this.createdAt = createdAt;
     }
 }
+
+
+//lombok hatana pada kyuki getter setter of pwd and user nhi aarhe the 

@@ -28,11 +28,11 @@ public class ChatController {
     }
 
     @GetMapping("/messages/{roomId}")
-    public List<Message> getMessages(@PathVariable Long roomId) {
+    public List<Message> getMessages(@PathVariable String roomId) {
         return chatService.getMessages(roomId);
     }
     @GetMapping("/room/{roomId}/exists")
-public boolean roomExists(@PathVariable Long roomId) {
+public boolean roomExists(@PathVariable String roomId) {
     return chatService.roomExists(roomId);
 }
 }

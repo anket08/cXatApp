@@ -1,275 +1,351 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, User, Shield, Save, Lock, FileText, CheckCircle } from 'lucide-react';
+import { ChevronLeft, User, Save, Lock, FileText, CheckCircle, Radio } from 'lucide-react';
 
 const ProfileDashboard = () => {
-    const navigate = useNavigate();
-    const [user, setUser] = useState({ username: 'Traveler', id: '000', bio: '', gender: 'Unspecified' });
-    const [formData, setFormData] = useState({
-        username: '',
-        bio: '',
-        gender: '',
+  const navigate = useNavigate();
+  const [user, setUser] = useState({ username: 'Traveler', id: '000', bio: '', gender: 'Unspecified' });
+  const [formData, setFormData] = useState({
+    username: '',
+    bio: '',
+    gender: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
+  const [saveStatus, setSaveStatus] = useState(null);
+
+  useEffect(() => {
+    const storedUser = sessionStorage.getItem('user');
+    if (storedUser) {
+      const parsed = JSON.parse(storedUser);
+      setUser(parsed);
+      setFormData({
+        username: parsed.username || '',
+        bio: parsed.bio || '',
+        gender: parsed.gender || 'm',
         newPassword: '',
-        confirmPassword: ''
-    });
-    const [isEditing, setIsEditing] = useState(false);
-    const [saveStatus, setSaveStatus] = useState(null); // 'saving', 'success', 'error'
+        confirmPassword: '',
+      });
+    }
+  }, []);
 
-    useEffect(() => {
-        const storedUser = sessionStorage.getItem('user'); // Or localStorage based on App.js
-        if (storedUser) {
-            const parsed = JSON.parse(storedUser);
-            setUser(parsed);
-            setFormData({
-                username: parsed.username || '',
-                bio: parsed.bio || 'No bio signal detected.',
-                gender: parsed.gender || 'm',
-                newPassword: '',
-                confirmPassword: ''
-            });
-        }
-    }, []);
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+  const handleSave = (e) => {
+    e.preventDefault();
+    setSaveStatus('saving');
 
-    const handleSave = (e) => {
-        e.preventDefault();
-        setSaveStatus('saving');
+    setTimeout(() => {
+      if (formData.newPassword && formData.newPassword !== formData.confirmPassword) {
+        setSaveStatus('error');
+        alert('Passwords do not match!');
+        setSaveStatus(null);
+        return;
+      }
 
-        // Simulate API Call
-        setTimeout(() => {
-            if (formData.newPassword && formData.newPassword !== formData.confirmPassword) {
-                setSaveStatus('error');
-                alert("Passwords do not match!");
-                setSaveStatus(null);
-                return;
-            }
+      const updatedUser = { ...user, ...formData };
+      setUser(updatedUser);
+      sessionStorage.setItem('user', JSON.stringify(updatedUser));
+      setSaveStatus('success');
 
-            const updatedUser = { ...user, ...formData };
-            // In a real app, post to backend here
-            setUser(updatedUser);
-            sessionStorage.setItem('user', JSON.stringify(updatedUser)); // Update Local Session
-            setSaveStatus('success');
+      setTimeout(() => setSaveStatus(null), 2500);
+    }, 1200);
+  };
 
-            setTimeout(() => setSaveStatus(null), 2000);
-        }, 1500);
-    };
+  return (
+    <div style={{
+      position: 'fixed',
+      inset: 0,
+      background: 'var(--bg-0)',
+      overflowY: 'auto',
+      overflowX: 'hidden',
+    }}>
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.011) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.011) 1px, transparent 1px)
+          `,
+          backgroundSize: '64px 64px',
+        }} />
+      </div>
 
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: { staggerChildren: 0.1 }
-        }
-    };
-
-    const itemVariants = {
-        hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0 }
-    };
-
-    return (
-        <div className="landing-hero" style={{ width: '100vw', height: '100vh', overflowY: 'auto', paddingBottom: '50px', position: 'relative' }}>
-            {/* Animated Background Gradient */}
-            <div className="animated-gradient-bg"></div>
-
-            {/* Floating Orbs */}
-            <div className="floating-orb orb-1"></div>
-            <div className="floating-orb orb-2"></div>
-
-            {/* Grid Background */}
-            <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
-                <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)`, backgroundSize: '60px 60px' }}></div>
-            </div>
-
-            <div style={{ position: 'relative', zIndex: 10, maxWidth: '1000px', margin: '0 auto', padding: '40px 20px' }}>
-                {/* Header */}
-                <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
-                    <button
-                        onClick={() => navigate('/lobby')}
-                        style={{
-                            background: 'rgba(255,255,255,0.05)',
-                            border: '1px solid rgba(255,255,255,0.1)',
-                            color: '#fff',
-                            padding: '10px 20px',
-                            borderRadius: '8px',
-                            fontSize: '0.85rem',
-                            fontWeight: '600',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s',
-                            zIndex: 20
-                        }}
-                    >
-                        <ChevronLeft size={16} /> RETURN TO COMMAND
-                    </button>
-
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <div style={{ width: '8px', height: '8px', background: '#00ff95', borderRadius: '50%', boxShadow: '0 0 10px #00ff95' }}></div>
-                        <span style={{ fontSize: '0.75rem', fontFamily: 'monospace', color: '#00ff95' }}>SYSTEM_ONLINE</span>
-                    </div>
-                </header>
-
-                <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="visible"
-                    style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}
-                >
-                    {/* User Identity Card */}
-                    <motion.div variants={itemVariants} style={{ display: 'flex', alignItems: 'center', gap: '30px', background: 'rgba(10,10,10,0.6)', padding: '40px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(10px)' }}>
-                        <div style={{ position: 'relative' }}>
-                            <div style={{ width: '120px', height: '120px', borderRadius: '50%', background: 'linear-gradient(135deg, #00f2ff, #00a8ff)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 30px rgba(0, 242, 255, 0.3)' }}>
-                                <span style={{ fontSize: '3.5rem', fontWeight: '900', color: '#000' }}>{user.username?.charAt(0).toUpperCase()}</span>
-                            </div>
-                            <div style={{ position: 'absolute', bottom: '0', right: '0', background: '#000', borderRadius: '50%', padding: '4px', border: '2px solid rgba(255,255,255,0.1)' }}>
-                                <div style={{ width: '24px', height: '24px', background: '#00ff95', borderRadius: '50%', border: '2px solid #000' }}></div>
-                            </div>
-                        </div>
-                        <div>
-                            <h1 style={{ fontSize: '2.5rem', fontWeight: '900', margin: 0, color: '#fff', letterSpacing: '-1px' }}>{user.username}</h1>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginTop: '10px' }}>
-                                <span style={{ fontFamily: 'monospace', color: 'rgba(255,255,255,0.5)', background: 'rgba(255,255,255,0.05)', padding: '4px 10px', borderRadius: '4px', fontSize: '0.8rem' }}>ID: {user.id}</span>
-                                <span style={{ fontFamily: 'monospace', color: '#00f2ff', background: 'rgba(0, 242, 255, 0.1)', padding: '4px 10px', borderRadius: '4px', fontSize: '0.8rem' }}>OPERATOR LEVEL</span>
-                            </div>
-                        </div>
-                    </motion.div>
-
-                    {/* Edit Profile Form */}
-                    <motion.div variants={itemVariants} style={{ background: 'rgba(20,20,20,0.6)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: '40px', position: 'relative', overflow: 'hidden' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '30px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '20px' }}>
-                            <User size={24} color="#00f2ff" />
-                            <h2 style={{ fontSize: '1.5rem', color: '#fff', margin: 0 }}>PROFILE_CONFIGURATION</h2>
-                        </div>
-
-                        <form onSubmit={handleSave} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px' }}>
-                            {/* Full Name */}
-                            <div style={{ gridColumn: 'span 2' }}>
-                                <label style={{ display: 'block', color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem', marginBottom: '8px', letterSpacing: '1px' }}>OPERATOR ALIAS</label>
-                                <div style={{ position: 'relative' }}>
-                                    <User size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.4)' }} />
-                                    <input
-                                        type="text"
-                                        name="username"
-                                        value={formData.username}
-                                        onChange={handleChange}
-                                        style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', padding: '16px 16px 16px 50px', borderRadius: '12px', color: '#fff', fontSize: '1rem', outline: 'none' }}
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Bio */}
-                            <div style={{ gridColumn: 'span 2' }}>
-                                <label style={{ display: 'block', color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem', marginBottom: '8px', letterSpacing: '1px' }}>BIO-DATA SIGNATURE</label>
-                                <div style={{ position: 'relative' }}>
-                                    <FileText size={18} style={{ position: 'absolute', left: '16px', top: '20px', color: 'rgba(255,255,255,0.4)' }} />
-                                    <textarea
-                                        name="bio"
-                                        value={formData.bio}
-                                        onChange={handleChange}
-                                        rows="4"
-                                        style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', padding: '16px 16px 16px 50px', borderRadius: '12px', color: '#fff', fontSize: '1rem', outline: 'none', resize: 'none', fontFamily: 'inherit' }}
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Gender / Identity */}
-                            <div>
-                                <label style={{ display: 'block', color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem', marginBottom: '8px', letterSpacing: '1px' }}>IDENTITY MARKER</label>
-                                <select
-                                    name="gender"
-                                    value={formData.gender}
-                                    onChange={handleChange}
-                                    style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', padding: '16px', borderRadius: '12px', color: '#fff', fontSize: '1rem', outline: 'none', cursor: 'pointer' }}
-                                >
-                                    <option value="m" style={{ background: '#000' }}>MALE</option>
-                                    <option value="f" style={{ background: '#000' }}>FEMALE</option>
-                                    <option value="n" style={{ background: '#000' }}>NON-BINARY</option>
-                                    <option value="x" style={{ background: '#000' }}>UNDISCLOSED</option>
-                                </select>
-                            </div>
-
-                            {/* Empty Grid for Layout */}
-                            <div></div>
-
-                            <div style={{ gridColumn: 'span 2', height: '1px', background: 'rgba(255,255,255,0.1)', margin: '10px 0' }}></div>
-
-                            {/* Password Section */}
-                            <div>
-                                <label style={{ display: 'block', color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem', marginBottom: '8px', letterSpacing: '1px' }}>NEW ACCESS CODE</label>
-                                <div style={{ position: 'relative' }}>
-                                    <Lock size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.4)' }} />
-                                    <input
-                                        type="password"
-                                        name="newPassword"
-                                        value={formData.newPassword}
-                                        onChange={handleChange}
-                                        placeholder="••••••••"
-                                        style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', padding: '16px 16px 16px 50px', borderRadius: '12px', color: '#fff', fontSize: '1rem', outline: 'none' }}
-                                    />
-                                </div>
-                            </div>
-
-                            <div>
-                                <label style={{ display: 'block', color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem', marginBottom: '8px', letterSpacing: '1px' }}>CONFIRM ACCESS CODE</label>
-                                <div style={{ position: 'relative' }}>
-                                    <Lock size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.4)' }} />
-                                    <input
-                                        type="password"
-                                        name="confirmPassword"
-                                        value={formData.confirmPassword}
-                                        onChange={handleChange}
-                                        placeholder="••••••••"
-                                        style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', padding: '16px 16px 16px 50px', borderRadius: '12px', color: '#fff', fontSize: '1rem', outline: 'none' }}
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Save Button */}
-                            <div style={{ gridColumn: 'span 2', display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
-                                <motion.button
-                                    whileHover={{ scale: 1.02, boxShadow: '0 0 20px rgba(0, 242, 255, 0.3)' }}
-                                    whileTap={{ scale: 0.98 }}
-                                    type="submit"
-                                    style={{
-                                        background: saveStatus === 'success' ? '#00ff95' : '#fff',
-                                        color: '#000',
-                                        border: 'none',
-                                        padding: '16px 40px',
-                                        borderRadius: '12px',
-                                        fontSize: '1rem',
-                                        fontWeight: '800',
-                                        cursor: 'pointer',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '12px',
-                                        minWidth: '200px',
-                                        justifyContent: 'center',
-                                        transition: 'all 0.3s'
-                                    }}
-                                >
-                                    {saveStatus === 'success' ? (
-                                        <>
-                                            <CheckCircle size={20} /> UPDATED
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Save size={20} /> SAVE CHANGES
-                                        </>
-                                    )}
-                                </motion.button>
-                            </div>
-                        </form>
-                    </motion.div>
-                </motion.div>
-            </div>
+      <header style={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 20,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0 40px',
+        height: 68,
+        borderBottom: '1px solid var(--border-1)',
+        background: 'rgba(10,10,15,0.85)',
+        backdropFilter: 'blur(12px)',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{
+            width: 32, height: 32,
+            background: 'var(--cyan-dim)',
+            border: '1px solid rgba(34,211,238,0.2)',
+            borderRadius: 8,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <Radio size={15} color="var(--cyan)" />
+          </div>
+          <span style={{ fontWeight: 800, fontSize: '1rem', color: 'var(--text-1)', letterSpacing: '-0.02em' }}>cXat</span>
         </div>
-    );
+
+        <button
+          onClick={() => navigate('/lobby')}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+            background: 'var(--surface-1)',
+            border: '1px solid var(--border-1)',
+            color: 'var(--text-2)',
+            padding: '8px 16px',
+            borderRadius: 'var(--radius-md)',
+            fontSize: '0.83rem',
+            fontWeight: 600,
+            cursor: 'pointer',
+            transition: 'all var(--transition)',
+          }}
+          onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--border-3)'}
+          onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border-1)'}
+        >
+          <ChevronLeft size={15} /> Back to lobby
+        </button>
+      </header>
+
+      <div style={{ position: 'relative', zIndex: 10, maxWidth: 700, margin: '0 auto', padding: '48px 24px 80px' }}>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 20,
+            marginBottom: 48,
+            padding: '28px 28px',
+            background: 'var(--bg-1)',
+            border: '1px solid var(--border-2)',
+            borderRadius: 'var(--radius-xl)',
+          }}>
+            <div style={{
+              width: 72, height: 72,
+              borderRadius: 20,
+              background: 'var(--cyan-dim)',
+              border: '1px solid rgba(34,211,238,0.2)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '2rem',
+              fontWeight: 800,
+              color: 'var(--cyan)',
+              flexShrink: 0,
+            }}>
+              {user.username?.charAt(0).toUpperCase() || 'U'}
+            </div>
+            <div>
+              <h1 style={{ fontSize: '1.4rem', fontWeight: 800, letterSpacing: '-0.02em', color: 'var(--text-1)', marginBottom: 4 }}>
+                {user.username}
+              </h1>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{
+                  background: 'var(--surface-1)',
+                  border: '1px solid var(--border-1)',
+                  padding: '3px 8px',
+                  borderRadius: 6,
+                  fontSize: '0.72rem',
+                  color: 'var(--text-3)',
+                  fontFamily: 'monospace',
+                }}>
+                  {user.id}
+                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                  <div style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--green)' }} />
+                  <span style={{ fontSize: '0.72rem', color: 'var(--text-3)' }}>Active</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            <Section title="Profile" icon={<User size={16} />}>
+              <Field label="Username">
+                <InputRow icon={<User size={15} />}>
+                  <input
+                    type="text"
+                    name="username"
+                    value={formData.username}
+                    onChange={handleChange}
+                    style={inputSt}
+                  />
+                </InputRow>
+              </Field>
+
+              <Field label="Bio">
+                <div style={{ position: 'relative' }}>
+                  <div style={{ position: 'absolute', left: 14, top: 14, color: 'var(--text-3)', pointerEvents: 'none' }}>
+                    <FileText size={15} />
+                  </div>
+                  <textarea
+                    name="bio"
+                    value={formData.bio}
+                    onChange={handleChange}
+                    rows={3}
+                    placeholder="A short bio..."
+                    style={{
+                      ...inputSt,
+                      padding: '12px 14px 12px 42px',
+                      resize: 'none',
+                      fontFamily: 'inherit',
+                      lineHeight: 1.6,
+                    }}
+                  />
+                </div>
+              </Field>
+
+              <Field label="Identity">
+                <select
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                  style={{ ...inputSt, cursor: 'pointer' }}
+                >
+                  <option value="m" style={{ background: '#0f0f18' }}>Male</option>
+                  <option value="f" style={{ background: '#0f0f18' }}>Female</option>
+                  <option value="n" style={{ background: '#0f0f18' }}>Non-binary</option>
+                  <option value="x" style={{ background: '#0f0f18' }}>Prefer not to say</option>
+                </select>
+              </Field>
+            </Section>
+
+            <Section title="Security" icon={<Lock size={16} />}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                <Field label="New password">
+                  <InputRow icon={<Lock size={15} />}>
+                    <input
+                      type="password"
+                      name="newPassword"
+                      value={formData.newPassword}
+                      onChange={handleChange}
+                      placeholder="••••••••"
+                      style={inputSt}
+                    />
+                  </InputRow>
+                </Field>
+                <Field label="Confirm password">
+                  <InputRow icon={<Lock size={15} />}>
+                    <input
+                      type="password"
+                      name="confirmPassword"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      placeholder="••••••••"
+                      style={inputSt}
+                    />
+                  </InputRow>
+                </Field>
+              </div>
+            </Section>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <motion.button
+                type="submit"
+                whileHover={{ scale: 1.01, boxShadow: '0 0 20px rgba(34,211,238,0.12)' }}
+                whileTap={{ scale: 0.99 }}
+                disabled={saveStatus === 'saving'}
+                style={{
+                  padding: '13px 32px',
+                  background: saveStatus === 'success' ? 'var(--green)' : 'var(--cyan)',
+                  color: '#0a0a0f',
+                  border: 'none',
+                  borderRadius: 'var(--radius-md)',
+                  fontWeight: 700,
+                  fontSize: '0.9rem',
+                  cursor: saveStatus === 'saving' ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  transition: 'all var(--transition)',
+                  opacity: saveStatus === 'saving' ? 0.7 : 1,
+                }}
+              >
+                {saveStatus === 'success' ? (
+                  <><CheckCircle size={16} /> Saved</>
+                ) : saveStatus === 'saving' ? (
+                  'Saving...'
+                ) : (
+                  <><Save size={16} /> Save changes</>
+                )}
+              </motion.button>
+            </div>
+          </form>
+        </motion.div>
+      </div>
+    </div>
+  );
+};
+
+const Section = ({ title, icon, children }) => (
+  <div style={{
+    background: 'var(--bg-1)',
+    border: '1px solid var(--border-1)',
+    borderRadius: 'var(--radius-xl)',
+    overflow: 'hidden',
+  }}>
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8,
+      padding: '18px 24px',
+      borderBottom: '1px solid var(--border-1)',
+      color: 'var(--text-2)',
+    }}>
+      {icon}
+      <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-2)' }}>{title}</span>
+    </div>
+    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+      {children}
+    </div>
+  </div>
+);
+
+const Field = ({ label, children }) => (
+  <div>
+    <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-3)', letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: 8 }}>
+      {label}
+    </label>
+    {children}
+  </div>
+);
+
+const InputRow = ({ icon, children }) => (
+  <div style={{ position: 'relative' }}>
+    <div style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-3)', pointerEvents: 'none' }}>
+      {icon}
+    </div>
+    {children}
+  </div>
+);
+
+const inputSt = {
+  width: '100%',
+  padding: '12px 14px 12px 42px',
+  background: 'var(--surface-1)',
+  border: '1px solid var(--border-2)',
+  borderRadius: 'var(--radius-md)',
+  color: 'var(--text-1)',
+  fontSize: '0.9rem',
+  transition: 'border-color 0.2s',
 };
 
 export default ProfileDashboard;

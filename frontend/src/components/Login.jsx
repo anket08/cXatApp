@@ -34,7 +34,7 @@ const Login = ({ onLogin }) => {
                 password: formData.password
             });
             await minLoadTime(startTime);
-            if (response.data === "Login successful") {
+            if (response.status === 200) {
                 try {
                     const userResponse = await axios.get(`http://localhost:8080/auth/user/${formData.username}`);
                     onLogin(userResponse.data);
@@ -46,7 +46,7 @@ const Login = ({ onLogin }) => {
             }
         } catch (err) {
             await minLoadTime(startTime);
-            setError('Connection failed. Check if backend is running.');
+            setError('Please check your credentials and try again.');
         } finally {
             setLoading(false);
         }

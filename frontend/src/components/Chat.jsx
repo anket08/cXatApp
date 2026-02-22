@@ -53,7 +53,7 @@ const Chat = ({ user, activeRoom: propActiveRoom, onLeaveRoom }) => {
 
     const sendMessage = () => {
         if (!input.trim() || !isConnected) return;
-        const payload = { roomId: parseInt(activeRoom), senderId: user.id, content: input.trim() };
+        const payload = { roomId: activeRoom, senderId: user.id, content: input.trim() };
         stompClientRef.current.send("/app/chat", {}, JSON.stringify(payload));
         setInput("");  // Clear input after sending
     };

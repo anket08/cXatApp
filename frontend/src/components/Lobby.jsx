@@ -27,14 +27,37 @@ const Lobby = ({ user, onJoinRoom, onLogout }) => {
     };
 
     // --- Join Room Logic (FIXED) ---
-    const handleJoinRoom = () => {
-        if (roomId.trim()) {
+    const handleJoinRoom = async () => {
+
+    if (!roomId.trim()) {
+        alert("Please enter a valid Frequency ID");
+        return;
+    }
+
+    try {
+
+        // Room existence check
+        const res = await axios.get(
+            `http://localhost:8080/chat/room/${roomId.trim()}/exists`
+        );
+
+        if(res.data === true){
+
             onJoinRoom(roomId.trim());
             navigate(`/chat/${roomId.trim()}`);
+
         } else {
-            alert("Please enter a valid Frequency ID");
+
+            alert("Frequency does not exist");
+
         }
-    };
+
+    } catch(err){
+
+        alert("Server error");
+
+    }
+};
 
     return (
         <div className="lobby-root">

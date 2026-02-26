@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @Document(collection = "users")
 public class User {
@@ -17,7 +18,7 @@ public class User {
     private String password;
     private String status = "OFFLINE";
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private String createdAt = LocalDateTime.now(ZoneOffset.UTC).toString();    
 
     public User() {}
 
@@ -41,7 +42,7 @@ public class User {
         return status;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
@@ -65,7 +66,7 @@ public class User {
         this.status = status;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 }

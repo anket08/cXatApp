@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import Chat from './components/Chat';
 import Lobby from './components/Lobby';
 import LandingPage from './components/LandingPage';
 import ProfileDashboard from './components/ProfileDashboard';
+import Navbar from './components/Navbar';
 
 // Protected Route Component
 const ProtectedRoute = ({ children, user }) => {
@@ -12,21 +13,6 @@ const ProtectedRoute = ({ children, user }) => {
     return <Navigate to="/login" replace />;
   }
   return children;
-};
-
-// Main App Layout with Effects
-const AppLayout = ({ children }) => {
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      const { clientX, clientY } = e;
-      const moveX = (clientX - window.innerWidth / 2) * 0.01;
-      const moveY = (clientY - window.innerHeight / 2) * 0.01;
-      document.body.style.backgroundPosition = `${moveX}px ${moveY}px`;
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-  return <>{children}</>;
 };
 
 function App() {
@@ -65,7 +51,11 @@ function App() {
 
   return (
     <Router>
-      <AppLayout>
+      {/* Background elements can be added here or in index.css */}
+      <div className="app-container">
+        {/* The Navbar determines whether to show itself based on useLocation internally */}
+        <Navbar user={user} onLogout={handleLogout} />
+
         <Routes>
           <Route path="/" element={<LandingPage />} />
 
@@ -102,7 +92,7 @@ function App() {
           {/* Catch-all redirect */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </AppLayout>
+      </div>
     </Router>
   );
 }

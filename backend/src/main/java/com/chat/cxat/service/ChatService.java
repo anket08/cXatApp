@@ -27,7 +27,7 @@ public class ChatService {
 
 
     // ==========================
-    // CREATE ROOM
+    // CREATE PRIVATE ROOM
     // ==========================
 
     public ChatRoom createPrivateRoom() {
@@ -44,7 +44,7 @@ public class ChatService {
 
 
     // ==========================
-    // RANDOM ROOM ID
+    // GENERATE UNIQUE ROOM ID
     // ==========================
 
     private String generateUniqueRoomId() {
@@ -54,9 +54,7 @@ public class ChatService {
 
         do {
 
-            int number =
-                    1000 + random.nextInt(9000);
-
+            int number = 1000 + random.nextInt(9000);
             roomId = String.valueOf(number);
 
         } while (chatRoomRepository.existsById(roomId));
@@ -72,21 +70,65 @@ public class ChatService {
 
     public Message sendMessage(Message message) {
 
-        // Save in MongoDB
+        /*
+        1️⃣ Save message in MongoDB
+         */
         Message saved =
                 messageRepository.save(message);
 
 
         /*
-        Cache Invalidation
-        Delete Redis cache when new message arrives
+        2️⃣ Delete Redis Cache
+        So next read fetches fresh messages
          */
+
         redisService.deleteChatCache(
                 saved.getRoomId()
         );
 
 
         return saved;
+    }
+
+
+
+    // ==========================
+    // MARK MESSAGES AS READ
+    // ==========================
+
+    public void markMessagesAsRead(String roomId) {
+
+        /*
+        1️⃣ Fetch messages from MongoDB
+         */
+
+        List<Message> messages =
+                messageRepository
+                        .findByRoomIdOrderByCreatedAtAsc(roomId);
+
+
+        /*
+        2️⃣ Update read status
+         */
+
+        for (Message m : messages) {
+            m.setRead(true);
+        }
+
+
+        /*
+        3️⃣ Save updated messages
+         */
+
+        messageRepository.saveAll(messages);
+
+
+        /*
+        4️⃣ Delete Redis Cache
+        So read status updates reflect
+         */
+
+        redisService.deleteChatCache(roomId);
     }
 
 
@@ -103,7 +145,7 @@ public class ChatService {
 
 
     // ==========================
-    // GET MESSAGES
+    // GET MESSAGES (CACHE ASIDE)
     // ==========================
 
     public List<Message> getMessages(String roomId) {
@@ -117,7 +159,7 @@ public class ChatService {
                 redisService.getCachedMessages(roomId);
 
 
-        if(cachedMessages != null){
+        if (cachedMessages != null) {
 
             return cachedMessages;
         }
@@ -134,8 +176,7 @@ public class ChatService {
 
 
         /*
-        3️⃣ Store in Redis
-        TTL = 1 Hour
+        3️⃣ Store in Redis (TTL = 1 Hour)
          */
 
         redisService.cacheMessages(

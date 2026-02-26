@@ -1,10 +1,5 @@
 package com.chat.cxat.model;
 
-/*
-Simple DTO for read receipts
-Used only for WebSocket communication
-*/
-
 public class ReadReceipt {
 
     private String roomId;

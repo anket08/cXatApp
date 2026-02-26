@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 // import lombok.AllArgsConstructor;
 // import lombok.Data;
@@ -22,7 +23,7 @@ public class ChatRoom {
 
     private String name;
     private String type;
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private String createdAt =LocalDateTime.now(ZoneOffset.UTC).toString(); 
 
     public String getId() {
         return id;
@@ -33,7 +34,7 @@ public class ChatRoom {
     public String getType() {
         return type;
     }
-    public LocalDateTime getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
     public void setId(String id) {
@@ -45,7 +46,7 @@ public class ChatRoom {
     public void setType(String type) {
         this.type = type;
     }
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, User, Shield, Save, Lock, FileText, CheckCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { User, Shield, Save, Lock, FileText, CheckCircle, AtSign, Settings } from 'lucide-react';
 
 const ProfileDashboard = () => {
-    const navigate = useNavigate();
-    const [user, setUser] = useState({ username: 'Traveler', id: '000', bio: '', gender: 'Unspecified' });
+    // We already have Navbar globally via App.jsx
+    const [user, setUser] = useState({ username: 'Operator', id: '000', bio: '', gender: 'Unspecified' });
     const [formData, setFormData] = useState({
         username: '',
         bio: '',
@@ -13,18 +12,17 @@ const ProfileDashboard = () => {
         newPassword: '',
         confirmPassword: ''
     });
-    const [isEditing, setIsEditing] = useState(false);
     const [saveStatus, setSaveStatus] = useState(null); // 'saving', 'success', 'error'
 
     useEffect(() => {
-        const storedUser = sessionStorage.getItem('user'); // Or localStorage based on App.js
+        const storedUser = localStorage.getItem('cxat_user');
         if (storedUser) {
             const parsed = JSON.parse(storedUser);
             setUser(parsed);
             setFormData({
                 username: parsed.username || '',
-                bio: parsed.bio || 'No bio signal detected.',
-                gender: parsed.gender || 'm',
+                bio: parsed.bio || 'Available',
+                gender: parsed.gender || 'n',
                 newPassword: '',
                 confirmPassword: ''
             });
@@ -39,7 +37,6 @@ const ProfileDashboard = () => {
         e.preventDefault();
         setSaveStatus('saving');
 
-        // Simulate API Call
         setTimeout(() => {
             if (formData.newPassword && formData.newPassword !== formData.confirmPassword) {
                 setSaveStatus('error');
@@ -49,21 +46,16 @@ const ProfileDashboard = () => {
             }
 
             const updatedUser = { ...user, ...formData };
-            // In a real app, post to backend here
             setUser(updatedUser);
-            sessionStorage.setItem('user', JSON.stringify(updatedUser)); // Update Local Session
+            localStorage.setItem('cxat_user', JSON.stringify(updatedUser));
             setSaveStatus('success');
-
             setTimeout(() => setSaveStatus(null), 2000);
-        }, 1500);
+        }, 1000);
     };
 
     const containerVariants = {
         hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: { staggerChildren: 0.1 }
-        }
+        visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
     };
 
     const itemVariants = {
@@ -72,196 +64,117 @@ const ProfileDashboard = () => {
     };
 
     return (
-        <div className="landing-hero" style={{ width: '100vw', height: '100vh', overflowY: 'auto', paddingBottom: '50px', position: 'relative' }}>
-            {/* Animated Background Gradient */}
-            <div className="animated-gradient-bg"></div>
-
-            {/* Floating Orbs */}
-            <div className="floating-orb orb-1"></div>
-            <div className="floating-orb orb-2"></div>
-
-            {/* Grid Background */}
-            <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
-                <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)`, backgroundSize: '60px 60px' }}></div>
+        <div style={{ minHeight: '100vh', paddingTop: '100px', paddingBottom: '50px', position: 'relative' }}>
+            {/* Background */}
+            <div style={{ position: 'absolute', inset: 0, zIndex: -1, background: 'var(--bg-base)' }}>
+                <div style={{ position: 'absolute', top: '20%', left: '50%', transform: 'translateX(-50%)', width: '60vw', height: '40vw', background: 'radial-gradient(circle, rgba(112,0,255,0.05) 0%, transparent 60%)', filter: 'blur(80px)' }}></div>
+                <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
             </div>
 
-            <div style={{ position: 'relative', zIndex: 10, maxWidth: '1000px', margin: '0 auto', padding: '40px 20px' }}>
-                {/* Header */}
-                <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
-                    <button
-                        onClick={() => navigate('/lobby')}
-                        style={{
-                            background: 'rgba(255,255,255,0.05)',
-                            border: '1px solid rgba(255,255,255,0.1)',
-                            color: '#fff',
-                            padding: '10px 20px',
-                            borderRadius: '8px',
-                            fontSize: '0.85rem',
-                            fontWeight: '600',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s',
-                            zIndex: 20
-                        }}
-                    >
-                        <ChevronLeft size={16} /> RETURN TO COMMAND
-                    </button>
+            <div style={{ position: 'relative', zIndex: 10, maxWidth: '900px', margin: '0 auto', padding: '20px' }}>
+                <motion.div variants={containerVariants} initial="hidden" animate="visible" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <div style={{ width: '8px', height: '8px', background: '#00ff95', borderRadius: '50%', boxShadow: '0 0 10px #00ff95' }}></div>
-                        <span style={{ fontSize: '0.75rem', fontFamily: 'monospace', color: '#00ff95' }}>SYSTEM_ONLINE</span>
-                    </div>
-                </header>
-
-                <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="visible"
-                    style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}
-                >
-                    {/* User Identity Card */}
-                    <motion.div variants={itemVariants} style={{ display: 'flex', alignItems: 'center', gap: '30px', background: 'rgba(10,10,10,0.6)', padding: '40px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(10px)' }}>
+                    {/* Identity Card */}
+                    <motion.div variants={itemVariants} className="glass-panel" style={{ display: 'flex', alignItems: 'center', gap: '2rem', padding: '3rem', borderRadius: 'var(--radius-lg)' }}>
                         <div style={{ position: 'relative' }}>
-                            <div style={{ width: '120px', height: '120px', borderRadius: '50%', background: 'linear-gradient(135deg, #00f2ff, #00a8ff)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 30px rgba(0, 242, 255, 0.3)' }}>
-                                <span style={{ fontSize: '3.5rem', fontWeight: '900', color: '#000' }}>{user.username?.charAt(0).toUpperCase()}</span>
+                            <div style={{ width: '100px', height: '100px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 30px rgba(0, 242, 255, 0.3)' }}>
+                                <span style={{ fontSize: '3rem', fontWeight: '800', color: '#fff' }}>{user.username?.charAt(0).toUpperCase()}</span>
                             </div>
-                            <div style={{ position: 'absolute', bottom: '0', right: '0', background: '#000', borderRadius: '50%', padding: '4px', border: '2px solid rgba(255,255,255,0.1)' }}>
-                                <div style={{ width: '24px', height: '24px', background: '#00ff95', borderRadius: '50%', border: '2px solid #000' }}></div>
+                            <div style={{ position: 'absolute', bottom: '0', right: '0', background: 'var(--bg-base)', borderRadius: '50%', padding: '4px' }}>
+                                <div style={{ width: '20px', height: '20px', background: 'var(--success)', borderRadius: '50%' }}></div>
                             </div>
                         </div>
                         <div>
-                            <h1 style={{ fontSize: '2.5rem', fontWeight: '900', margin: 0, color: '#fff', letterSpacing: '-1px' }}>{user.username}</h1>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginTop: '10px' }}>
-                                <span style={{ fontFamily: 'monospace', color: 'rgba(255,255,255,0.5)', background: 'rgba(255,255,255,0.05)', padding: '4px 10px', borderRadius: '4px', fontSize: '0.8rem' }}>ID: {user.id}</span>
-                                <span style={{ fontFamily: 'monospace', color: '#00f2ff', background: 'rgba(0, 242, 255, 0.1)', padding: '4px 10px', borderRadius: '4px', fontSize: '0.8rem' }}>OPERATOR LEVEL</span>
+                            <h1 style={{ fontSize: '2.5rem', fontWeight: '800', margin: 0, color: 'var(--text-main)', letterSpacing: '-1px' }}>{user.username}</h1>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '12px' }}>
+                                <span style={{ background: 'rgba(255,255,255,0.05)', padding: '6px 12px', borderRadius: '8px', fontSize: '0.85rem', color: 'var(--text-muted)' }}>ID: {user.id}</span>
+                                <span style={{ background: 'rgba(0, 242, 255, 0.1)', color: 'var(--accent-primary)', padding: '6px 12px', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '600' }}>Active Operator</span>
                             </div>
                         </div>
                     </motion.div>
 
-                    {/* Edit Profile Form */}
-                    <motion.div variants={itemVariants} style={{ background: 'rgba(20,20,20,0.6)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: '40px', position: 'relative', overflow: 'hidden' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '30px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '20px' }}>
-                            <User size={24} color="#00f2ff" />
-                            <h2 style={{ fontSize: '1.5rem', color: '#fff', margin: 0 }}>PROFILE_CONFIGURATION</h2>
+                    {/* Settings Form */}
+                    <motion.div variants={itemVariants} className="glass-panel" style={{ padding: '3rem', borderRadius: 'var(--radius-lg)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '2rem', paddingBottom: '1.5rem', borderBottom: '1px solid var(--glass-border)' }}>
+                            <Settings size={22} color="var(--accent-primary)" />
+                            <h2 style={{ fontSize: '1.4rem', fontWeight: '700', margin: 0 }}>Configuration</h2>
                         </div>
 
-                        <form onSubmit={handleSave} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px' }}>
-                            {/* Full Name */}
+                        <form onSubmit={handleSave} style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: '2rem' }}>
+
                             <div style={{ gridColumn: 'span 2' }}>
-                                <label style={{ display: 'block', color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem', marginBottom: '8px', letterSpacing: '1px' }}>OPERATOR ALIAS</label>
+                                <label style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '8px', fontWeight: '600' }}>DISPLAY NAME</label>
                                 <div style={{ position: 'relative' }}>
-                                    <User size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.4)' }} />
-                                    <input
-                                        type="text"
-                                        name="username"
-                                        value={formData.username}
-                                        onChange={handleChange}
-                                        style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', padding: '16px 16px 16px 50px', borderRadius: '12px', color: '#fff', fontSize: '1rem', outline: 'none' }}
+                                    <AtSign size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                                    <input type="text" name="username" value={formData.username} onChange={handleChange}
+                                        style={{ width: '100%', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--glass-border)', padding: '14px 14px 14px 46px', borderRadius: '12px', color: '#fff', fontSize: '0.95rem', outline: 'none', transition: 'all 0.3s' }}
+                                        onFocus={e => { e.target.style.borderColor = 'var(--accent-primary)'; e.target.style.background = 'rgba(255,255,255,0.04)'; }}
+                                        onBlur={e => { e.target.style.borderColor = 'var(--glass-border)'; e.target.style.background = 'rgba(255,255,255,0.02)'; }}
                                     />
                                 </div>
                             </div>
 
-                            {/* Bio */}
                             <div style={{ gridColumn: 'span 2' }}>
-                                <label style={{ display: 'block', color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem', marginBottom: '8px', letterSpacing: '1px' }}>BIO-DATA SIGNATURE</label>
+                                <label style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '8px', fontWeight: '600' }}>BIO</label>
                                 <div style={{ position: 'relative' }}>
-                                    <FileText size={18} style={{ position: 'absolute', left: '16px', top: '20px', color: 'rgba(255,255,255,0.4)' }} />
-                                    <textarea
-                                        name="bio"
-                                        value={formData.bio}
-                                        onChange={handleChange}
-                                        rows="4"
-                                        style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', padding: '16px 16px 16px 50px', borderRadius: '12px', color: '#fff', fontSize: '1rem', outline: 'none', resize: 'none', fontFamily: 'inherit' }}
+                                    <FileText size={18} style={{ position: 'absolute', left: '16px', top: '16px', color: 'var(--text-muted)' }} />
+                                    <textarea name="bio" value={formData.bio} onChange={handleChange} rows="3"
+                                        style={{ width: '100%', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--glass-border)', padding: '14px 14px 14px 46px', borderRadius: '12px', color: '#fff', fontSize: '0.95rem', outline: 'none', resize: 'none', fontFamily: 'inherit', transition: 'all 0.3s' }}
+                                        onFocus={e => { e.target.style.borderColor = 'var(--accent-primary)'; e.target.style.background = 'rgba(255,255,255,0.04)'; }}
+                                        onBlur={e => { e.target.style.borderColor = 'var(--glass-border)'; e.target.style.background = 'rgba(255,255,255,0.02)'; }}
                                     />
                                 </div>
                             </div>
 
-                            {/* Gender / Identity */}
-                            <div>
-                                <label style={{ display: 'block', color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem', marginBottom: '8px', letterSpacing: '1px' }}>IDENTITY MARKER</label>
-                                <select
-                                    name="gender"
-                                    value={formData.gender}
-                                    onChange={handleChange}
-                                    style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', padding: '16px', borderRadius: '12px', color: '#fff', fontSize: '1rem', outline: 'none', cursor: 'pointer' }}
+                            <div style={{ gridColumn: 'span 2' }}>
+                                <label style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '8px', fontWeight: '600' }}>IDENTITY</label>
+                                <select name="gender" value={formData.gender} onChange={handleChange}
+                                    style={{ width: '100%', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--glass-border)', padding: '14px', borderRadius: '12px', color: '#fff', fontSize: '0.95rem', outline: 'none', cursor: 'pointer', appearance: 'none' }}
                                 >
-                                    <option value="m" style={{ background: '#000' }}>MALE</option>
-                                    <option value="f" style={{ background: '#000' }}>FEMALE</option>
-                                    <option value="n" style={{ background: '#000' }}>NON-BINARY</option>
-                                    <option value="x" style={{ background: '#000' }}>UNDISCLOSED</option>
+                                    <option value="m" style={{ background: '#111' }}>Male</option>
+                                    <option value="f" style={{ background: '#111' }}>Female</option>
+                                    <option value="n" style={{ background: '#111' }}>Non-Binary</option>
+                                    <option value="x" style={{ background: '#111' }}>Prefer not to say</option>
                                 </select>
                             </div>
 
-                            {/* Empty Grid for Layout */}
-                            <div></div>
+                            <div style={{ gridColumn: 'span 2', height: '1px', background: 'var(--glass-border)', margin: '1rem 0' }}></div>
 
-                            <div style={{ gridColumn: 'span 2', height: '1px', background: 'rgba(255,255,255,0.1)', margin: '10px 0' }}></div>
-
-                            {/* Password Section */}
                             <div>
-                                <label style={{ display: 'block', color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem', marginBottom: '8px', letterSpacing: '1px' }}>NEW ACCESS CODE</label>
+                                <label style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '8px', fontWeight: '600' }}>NEW PASSWORD</label>
                                 <div style={{ position: 'relative' }}>
-                                    <Lock size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.4)' }} />
-                                    <input
-                                        type="password"
-                                        name="newPassword"
-                                        value={formData.newPassword}
-                                        onChange={handleChange}
-                                        placeholder="••••••••"
-                                        style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', padding: '16px 16px 16px 50px', borderRadius: '12px', color: '#fff', fontSize: '1rem', outline: 'none' }}
+                                    <Lock size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                                    <input type="password" name="newPassword" value={formData.newPassword} onChange={handleChange} placeholder="••••••••"
+                                        style={{ width: '100%', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--glass-border)', padding: '14px 14px 14px 46px', borderRadius: '12px', color: '#fff', fontSize: '0.95rem', outline: 'none', transition: 'all 0.3s' }}
+                                        onFocus={e => { e.target.style.borderColor = 'var(--accent-secondary)'; e.target.style.background = 'rgba(255,255,255,0.04)'; }}
+                                        onBlur={e => { e.target.style.borderColor = 'var(--glass-border)'; e.target.style.background = 'rgba(255,255,255,0.02)'; }}
                                     />
                                 </div>
                             </div>
 
                             <div>
-                                <label style={{ display: 'block', color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem', marginBottom: '8px', letterSpacing: '1px' }}>CONFIRM ACCESS CODE</label>
+                                <label style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '8px', fontWeight: '600' }}>CONFIRM PASSWORD</label>
                                 <div style={{ position: 'relative' }}>
-                                    <Lock size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.4)' }} />
-                                    <input
-                                        type="password"
-                                        name="confirmPassword"
-                                        value={formData.confirmPassword}
-                                        onChange={handleChange}
-                                        placeholder="••••••••"
-                                        style={{ width: '100%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', padding: '16px 16px 16px 50px', borderRadius: '12px', color: '#fff', fontSize: '1rem', outline: 'none' }}
+                                    <Lock size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                                    <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} placeholder="••••••••"
+                                        style={{ width: '100%', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--glass-border)', padding: '14px 14px 14px 46px', borderRadius: '12px', color: '#fff', fontSize: '0.95rem', outline: 'none', transition: 'all 0.3s' }}
+                                        onFocus={e => { e.target.style.borderColor = 'var(--accent-secondary)'; e.target.style.background = 'rgba(255,255,255,0.04)'; }}
+                                        onBlur={e => { e.target.style.borderColor = 'var(--glass-border)'; e.target.style.background = 'rgba(255,255,255,0.02)'; }}
                                     />
                                 </div>
                             </div>
 
-                            {/* Save Button */}
-                            <div style={{ gridColumn: 'span 2', display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
-                                <motion.button
-                                    whileHover={{ scale: 1.02, boxShadow: '0 0 20px rgba(0, 242, 255, 0.3)' }}
+                            <div style={{ gridColumn: 'span 2', display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+                                <motion.button type="submit"
+                                    whileHover={{ scale: 1.02, boxShadow: '0 8px 25px rgba(255,255,255,0.2)' }}
                                     whileTap={{ scale: 0.98 }}
-                                    type="submit"
                                     style={{
-                                        background: saveStatus === 'success' ? '#00ff95' : '#fff',
-                                        color: '#000',
-                                        border: 'none',
-                                        padding: '16px 40px',
-                                        borderRadius: '12px',
-                                        fontSize: '1rem',
-                                        fontWeight: '800',
-                                        cursor: 'pointer',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '12px',
-                                        minWidth: '200px',
-                                        justifyContent: 'center',
-                                        transition: 'all 0.3s'
+                                        background: saveStatus === 'success' ? 'var(--success)' : 'var(--text-main)',
+                                        color: saveStatus === 'success' ? '#000' : 'var(--bg-base)',
+                                        border: 'none', padding: '14px 32px', borderRadius: '12px', fontSize: '0.95rem', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.3s ease'
                                     }}
                                 >
-                                    {saveStatus === 'success' ? (
-                                        <>
-                                            <CheckCircle size={20} /> UPDATED
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Save size={20} /> SAVE CHANGES
-                                        </>
-                                    )}
+                                    {saveStatus === 'success' ? <><CheckCircle size={18} /> UPDATED</> : <><Save size={18} /> SAVE CHANGES</>}
                                 </motion.button>
                             </div>
                         </form>

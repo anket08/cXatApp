@@ -14,11 +14,12 @@ public class Message {
 
     private String roomId;
     private String senderId;
+    private boolean read = false;
     private String content;
 
     // UTC timestamp
-    private LocalDateTime createdAt =
-            LocalDateTime.now(ZoneOffset.UTC);
+    private String createdAt =
+            LocalDateTime.now(ZoneOffset.UTC).toString();
 
 
     // ======================
@@ -36,9 +37,15 @@ public class Message {
         return id;
     }
 
+    public boolean isRead() {
+        return read;
+    }
+
     public String getRoomId() {
         return roomId;
     }
+    
+    
 
     public String getSenderId() {
         return senderId;
@@ -48,7 +55,7 @@ public class Message {
         return content;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
@@ -60,7 +67,9 @@ public class Message {
     public void setId(String id) {
         this.id = id;
     }
-
+public void setRead(boolean read) {
+        this.read = read;
+    }
     public void setRoomId(String roomId) {
         this.roomId = roomId;
     }
@@ -73,7 +82,7 @@ public class Message {
         this.content = content;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 }

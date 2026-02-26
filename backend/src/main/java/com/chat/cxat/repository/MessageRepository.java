@@ -14,12 +14,3 @@ public interface MessageRepository extends MongoRepository<Message, String> {
 
 
 // MongoDB me `id` field String type ka hota hai kyunki yeh ObjectId hota hai.
-// Lekin `roomId` ek alag field hai jo message kis room ka hai woh batata hai.
-// `roomId` ko hum Long type me rakh rahe hain kyunki frontend aur logic me
-// rooms numeric IDs se identify ho rahe hain.
-//
-// Isliye:
-// id      → String (MongoDB ObjectId)
-// roomId  → Long   (room identification)
-//
-// Dono fields alag purpose ke liye hain, isliye unka type alag hona sahi hai.

@@ -14,15 +14,24 @@ public class ChatService {
 
     private final ChatRoomRepository chatRoomRepository;
     private final MessageRepository messageRepository;
+    private final RedisService redisService;
 
     public ChatService(ChatRoomRepository chatRoomRepository,
-                       MessageRepository messageRepository) {
+                    MessageRepository messageRepository,
+                    RedisService redisService) {
+
         this.chatRoomRepository = chatRoomRepository;
         this.messageRepository = messageRepository;
+        this.redisService = redisService;
     }
 
-    // CREATE ROOM WITH RANDOM 4-DIGIT ID
+
+    // ==========================
+    // CREATE ROOM
+    // ==========================
+
     public ChatRoom createPrivateRoom() {
+
         String roomId = generateUniqueRoomId();
 
         ChatRoom room = new ChatRoom();
@@ -32,28 +41,110 @@ public class ChatService {
         return chatRoomRepository.save(room);
     }
 
-    // RANDOM 4-DIGIT UNIQUE ID (STRING)
+
+
+    // ==========================
+    // RANDOM ROOM ID
+    // ==========================
+
     private String generateUniqueRoomId() {
+
         Random random = new Random();
         String roomId;
 
         do {
-            int number = 1000 + random.nextInt(9000); // 1000–9999
+
+            int number =
+                    1000 + random.nextInt(9000);
+
             roomId = String.valueOf(number);
+
         } while (chatRoomRepository.existsById(roomId));
 
         return roomId;
     }
 
+
+
+    // ==========================
+    // SEND MESSAGE
+    // ==========================
+
     public Message sendMessage(Message message) {
-        return messageRepository.save(message);
+
+        // Save in MongoDB
+        Message saved =
+                messageRepository.save(message);
+
+
+        /*
+        Cache Invalidation
+        Delete Redis cache when new message arrives
+         */
+        redisService.deleteChatCache(
+                saved.getRoomId()
+        );
+
+
+        return saved;
     }
 
+
+
+    // ==========================
+    // ROOM EXISTS
+    // ==========================
+
     public boolean roomExists(String roomId) {
+
         return chatRoomRepository.existsById(roomId);
     }
 
+
+
+    // ==========================
+    // GET MESSAGES
+    // ==========================
+
     public List<Message> getMessages(String roomId) {
-        return messageRepository.findByRoomIdOrderByCreatedAtAsc(roomId);
+
+
+        /*
+        1️⃣ Try Redis Cache First
+         */
+
+        List<Message> cachedMessages =
+                redisService.getCachedMessages(roomId);
+
+
+        if(cachedMessages != null){
+
+            return cachedMessages;
+        }
+
+
+        /*
+        2️⃣ Fetch From MongoDB
+         */
+
+        List<Message> messages =
+                messageRepository
+                        .findByRoomIdOrderByCreatedAtAsc(roomId);
+
+
+
+        /*
+        3️⃣ Store in Redis
+        TTL = 1 Hour
+         */
+
+        redisService.cacheMessages(
+                roomId,
+                messages
+        );
+
+
+        return messages;
     }
+
 }

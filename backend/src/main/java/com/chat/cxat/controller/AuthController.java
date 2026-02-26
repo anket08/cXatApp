@@ -23,13 +23,7 @@ public class AuthController {
 
     // LOGIN
     @PostMapping("/login")
-    public User login(@RequestBody User user) {
-        User existing = userService.findByUsername(user.getUsername());
-
-        if (existing != null && existing.getPassword().equals(user.getPassword())) {
-            return existing;   // return full user object
-        }
-
-        return null;
-    }
+public User login(@RequestBody User user) {
+    return userService.login(user);
+}
 }

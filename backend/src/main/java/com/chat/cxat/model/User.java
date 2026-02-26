@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Document(collection = "users")
 public class User {
 
+    // public User() {}
     @Id
     private String id;
 

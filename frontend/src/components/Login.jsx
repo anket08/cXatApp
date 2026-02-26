@@ -3,7 +3,7 @@ import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Atom } from 'react-loading-indicators';
-import { User, Lock, Mail, ArrowRight, ChevronLeft, MessageSquare } from 'lucide-react';
+import { User, Lock, Mail, ArrowRight, ChevronLeft, PawPrint } from 'lucide-react';
 
 const Login = ({ onLogin }) => {
     const navigate = useNavigate();
@@ -96,11 +96,7 @@ const Login = ({ onLogin }) => {
             style={{ width: '100vw', height: '100vh', overflowY: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}
         >
             {/* Background */}
-            <div style={{ position: 'absolute', inset: 0, zIndex: -1, background: 'var(--bg-base)' }}>
-                <div style={{ position: 'absolute', top: '20%', left: '10%', width: '40vw', height: '40vw', background: 'radial-gradient(circle, rgba(0,242,255,0.06) 0%, transparent 60%)', filter: 'blur(80px)' }}></div>
-                <div style={{ position: 'absolute', bottom: '10%', right: '10%', width: '50vw', height: '50vw', background: 'radial-gradient(circle, rgba(112,0,255,0.06) 0%, transparent 60%)', filter: 'blur(100px)' }}></div>
-                <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
-            </div>
+            <div style={{ position: 'absolute', inset: 0, zIndex: -1, background: 'var(--bg-base)' }}></div>
 
             <div className="glass-panel" style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: '420px', padding: '3rem 2.5rem', margin: '0 20px', display: 'flex', flexDirection: 'column' }}>
 
@@ -109,9 +105,13 @@ const Login = ({ onLogin }) => {
                 </button>
 
                 <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-                    <div style={{ width: '48px', height: '48px', background: 'linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', boxShadow: '0 8px 25px rgba(0, 242, 255, 0.3)' }}>
-                        <MessageSquare size={24} color="#fff" strokeWidth={2.5} />
-                    </div>
+                    <motion.div
+                        initial={{ scale: 1 }}
+                        animate={{ rotate: [0, -10, 10, -10, 10, 0], scale: [1, 1.1, 1, 1.1, 1] }}
+                        transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                        style={{ width: '48px', height: '48px', background: '#d97736', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
+                        <PawPrint size={28} color="#000" />
+                    </motion.div>
                     <h1 style={{ fontSize: '2rem', fontWeight: '800', letterSpacing: '-0.5px', marginBottom: '0.5rem' }}>
                         {isRegistering ? 'Create an account' : 'Welcome back'}
                     </h1>

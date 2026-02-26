@@ -99,10 +99,7 @@ const Chat = ({ user, activeRoom: propActiveRoom, onLeaveRoom }) => {
         <div style={{ position: 'fixed', inset: 0, width: '100vw', height: '100vh', background: 'var(--bg-base)', display: 'flex', flexDirection: 'column', zIndex: 999 }}>
 
             {/* Background Details */}
-            <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
-                <div style={{ position: 'absolute', top: '-10%', left: '50%', transform: 'translateX(-50%)', width: '80vw', height: '40vw', background: 'radial-gradient(circle, rgba(0,242,255,0.03) 0%, transparent 60%)', filter: 'blur(80px)' }}></div>
-                <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px)', backgroundSize: '60px 60px' }}></div>
-            </div>
+            <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}></div>
 
             {/* Chat Header */}
             <header style={{ position: 'relative', zIndex: 10, height: '75px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 2rem', background: 'rgba(10, 10, 15, 0.7)', backdropFilter: 'blur(20px)', borderBottom: '1px solid var(--glass-border)', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
@@ -206,7 +203,7 @@ const Chat = ({ user, activeRoom: propActiveRoom, onLeaveRoom }) => {
             </main>
 
             {/* Input Footer */}
-            <footer style={{ position: 'relative', zIndex: 10, padding: '1.5rem 10% 2.5rem', background: 'linear-gradient(to top, rgba(5,5,8,1) 0%, rgba(5,5,8,0.8) 70%, transparent 100%)' }}>
+            <footer style={{ position: 'relative', zIndex: 10, padding: '1.5rem 10% 2.5rem', background: 'var(--bg-base)' }}>
                 <div style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(25px)', border: '1px solid var(--glass-border)', borderRadius: '50px', display: 'flex', alignItems: 'center', padding: '6px 6px 6px 24px', maxWidth: '900px', margin: '0 auto', transition: 'all 0.3s ease', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
                     <input
                         type="text"

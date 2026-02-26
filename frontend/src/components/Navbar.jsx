@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LogOut, MessageSquare } from 'lucide-react';
+import { LogOut, PawPrint } from 'lucide-react';
 
 const Navbar = ({ user, onLogout }) => {
     const navigate = useNavigate();
@@ -24,10 +24,21 @@ const Navbar = ({ user, onLogout }) => {
         >
             <div className="navbar-container">
                 <div className="nav-brand" onClick={() => navigate('/lobby')}>
-                    <div className="nav-logo">
-                        <MessageSquare size={18} color="#fff" strokeWidth={2.5} />
-                    </div>
-                    <span className="nav-title">cXat<span className="accent">.</span></span>
+                    <motion.div
+                        initial={{ scale: 1 }}
+                        animate={{
+                            rotate: [0, -10, 10, -10, 10, 0],
+                            scale: [1, 1.1, 1, 1.1, 1]
+                        }}
+                        transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            repeatDelay: 3
+                        }}
+                        style={{ background: '#d97736', color: '#000', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <PawPrint size={20} />
+                    </motion.div>
+                    <span className="nav-title">cXat</span>
                 </div>
 
                 <div className="nav-actions">

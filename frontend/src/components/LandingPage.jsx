@@ -46,21 +46,21 @@ const LandingPage = () => {
 
                 <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }} style={{ border: '1px solid #30363d', borderRadius: '100px', padding: '6px 16px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '8px', color: '#8b949e', fontSize: '0.85rem', fontWeight: 'bold', cursor: 'pointer' }}>
                     <div style={{ width: '8px', height: '8px', background: '#3fb950', borderRadius: '50%', boxShadow: '0 0 10px #3fb950' }}></div>
-                    Introducing cXat 2.0 <ChevronRight size={14} />
+                    Fast as Hell <ChevronRight size={14} />
                 </motion.div>
 
                 <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1 }} style={{ fontSize: 'clamp(3.5rem, 8vw, 5.5rem)', fontWeight: '800', lineHeight: 1.1, color: '#fff', textAlign: 'center', maxWidth: '900px', letterSpacing: '-0.04em' }}>
-                    Let's connect from <span style={{ color: '#79c0ff' }}>here.</span>
+                    Let's connect from <span style={{ color: '#79c0ff' }}>cXat.</span>
                 </motion.h1>
 
                 <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.3 }} style={{ color: '#8b949e', fontSize: '1.5rem', textAlign: 'center', maxWidth: '700px', marginTop: '24px', lineHeight: 1.5, fontWeight: '400' }}>
-                    The world’s leading secure communication platform. Built for performance. Used by millions. Powered by absolute privacy.
+                    Fast, agile messaging inspired by the speed of the cat family.
                 </motion.p>
 
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.5 }} style={{ marginTop: '40px', display: 'flex', gap: '16px' }}>
                     <div style={{ background: '#fff', borderRadius: '6px', padding: '4px', display: 'flex', boxShadow: '0 8px 24px rgba(112,0,255,0.2)' }}>
                         <input type="email" placeholder="Email address" style={{ border: 'none', background: 'transparent', padding: '12px 16px', color: '#000', outline: 'none', fontSize: '1.1rem', minWidth: '280px' }} />
-                        <button onClick={() => navigate('/login')} style={{ background: '#7000ff', color: '#fff', border: 'none', borderRadius: '6px', padding: '12px 24px', fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 0 20px rgba(112,0,255,0.5)' }}>
+                        <button onClick={() => navigate('/register')} style={{ background: '#7000ff', color: '#fff', border: 'none', borderRadius: '6px', padding: '12px 24px', fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 0 20px rgba(112,0,255,0.5)' }}>
                             Sign up for cXat
                         </button>
                     </div>

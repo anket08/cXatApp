@@ -1,30 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
-  /* Premium Dark Glassmorphic Palette */
-  --bg-base: #030305;
-  --bg-gradient: radial-gradient(circle at top right, #1a1a2e 0%, #030305 60%);
-  --glass-bg: rgba(255, 255, 255, 0.02);
-  --glass-border: rgba(255, 255, 255, 0.05);
-  --glass-highlight: rgba(255, 255, 255, 0.08);
+  /* GitHub Dark Premium Palette */
+  --bg-base: #0d1117;
+  --bg-gradient: #0d1117;
+  --glass-bg: #161b22;
+  --glass-border: #30363d;
+  --glass-highlight: rgba(177, 186, 196, 0.12);
 
-  --accent-primary: #00f2ff;
-  --accent-secondary: #7000ff;
-  --accent-tertiary: #ff007b;
+  --accent-primary: #79c0ff;
+  --accent-secondary: #d2a8ff;
+  --accent-tertiary: #3fb950;
 
-  --text-main: #ffffff;
-  --text-muted: #a1a1aa;
+  --text-main: #c9d1d9;
+  --text-muted: #8b949e;
 
-  --success: #00ff95;
-  --error: #ff4b4b;
+  --success: #3fb950;
+  --error: #f85149;
 
-  --font-main: 'Inter', sans-serif;
-  --radius-lg: 24px;
-  --radius-md: 16px;
-  --radius-sm: 8px;
+  --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --radius-lg: 12px;
+  --radius-md: 8px;
+  --radius-sm: 6px;
 
-  --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  --shadow-glow: 0 0 20px rgba(0, 242, 255, 0.2);
+  --shadow-glass: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 15px rgba(121, 192, 255, 0.2);
 }
 
 * {

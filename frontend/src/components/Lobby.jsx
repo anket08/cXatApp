@@ -62,11 +62,7 @@ const Lobby = ({ user, onJoinRoom, onLogout }) => {
     return (
         <div style={{ minHeight: '100vh', paddingTop: '100px', display: 'flex', flexDirection: 'column', position: 'relative' }}>
             {/* Background elements (Navbar is handled globally in App.jsx) */}
-            <div style={{ position: 'absolute', inset: 0, zIndex: -1, background: 'var(--bg-base)' }}>
-                <div style={{ position: 'absolute', top: '20%', left: '10%', width: '40vw', height: '40vw', background: 'radial-gradient(circle, rgba(0,242,255,0.04) 0%, transparent 60%)', filter: 'blur(80px)' }}></div>
-                <div style={{ position: 'absolute', bottom: '10%', right: '10%', width: '30vw', height: '30vw', background: 'radial-gradient(circle, rgba(112,0,255,0.04) 0%, transparent 60%)', filter: 'blur(80px)' }}></div>
-                <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
-            </div>
+            <div style={{ position: 'absolute', inset: 0, zIndex: -1, background: 'var(--bg-base)' }}></div>
 
             <div style={{ display: 'flex', flex: 1, width: '100%', zIndex: 10 }}>
                 {/* Sidebar */}

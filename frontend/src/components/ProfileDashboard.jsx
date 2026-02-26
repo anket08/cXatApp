@@ -66,10 +66,7 @@ const ProfileDashboard = () => {
     return (
         <div style={{ minHeight: '100vh', paddingTop: '100px', paddingBottom: '50px', position: 'relative' }}>
             {/* Background */}
-            <div style={{ position: 'absolute', inset: 0, zIndex: -1, background: 'var(--bg-base)' }}>
-                <div style={{ position: 'absolute', top: '20%', left: '50%', transform: 'translateX(-50%)', width: '60vw', height: '40vw', background: 'radial-gradient(circle, rgba(112,0,255,0.05) 0%, transparent 60%)', filter: 'blur(80px)' }}></div>
-                <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
-            </div>
+            <div style={{ position: 'absolute', inset: 0, zIndex: -1, background: 'var(--bg-base)' }}></div>
 
             <div style={{ position: 'relative', zIndex: 10, maxWidth: '900px', margin: '0 auto', padding: '20px' }}>
                 <motion.div variants={containerVariants} initial="hidden" animate="visible" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
